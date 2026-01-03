@@ -2,449 +2,124 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>이피맘 적금 프롬프트 복사</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>이피맘 현실적금 추천</title>
 
   <style>
     :root{
       --bg:#fffbf3;
       --text:#282539;
       --point:#cab5f3;
-      --card:#ffffff80;
-      --stroke:#2825391a;
+      --box:#ffffff;
     }
-    *{ box-sizing:border-box; }
 
     body{
       margin:0;
       background:var(--bg);
-      color:var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .screen{
-      min-height:100svh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:26px 18px;
+      color:var(--text);
     }
 
     .wrap{
-      width:100%;
-      max-width:520px;
+      max-width:420px;
+      margin:0 auto;
+      padding:24px 16px 40px;
     }
 
-    .top{
-      text-align:center;
-      margin-bottom:16px;
-    }
-
-    .title{
+    h1{
       font-size:18px;
       font-weight:900;
-      margin:0 0 6px;
-      line-height:1.35;
+      margin-bottom:20px;
+      text-align:center;
     }
-    .subtitle{
-      margin:0;
+
+    /* ───── 적금 설명 박스 영역 ───── */
+    .products{
+      display:flex;
+      gap:12px;
+      margin-bottom:24px;
+    }
+
+    .product-box{
+      flex:1;
+      background:var(--box);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.04);
       font-size:13px;
-      opacity:.75;
       line-height:1.45;
     }
 
-    /* (선택) 상단 이미지 - 원하면 hero.png 업로드 후 주석 해제 */
-    .hero{
-      display:none; /* 필요하면 block으로 바꿔주세요 */
-      width:100%;
-      max-width:280px;
-      margin:14px auto 10px;
-    }
-    .hero img{
-      width:100%;
-      border-radius:22px;
-      display:block;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:22px;
-      padding:16px 14px;
-      box-shadow: 0 10px 24px rgba(40,37,57,0.05);
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+    .product-title{
       font-weight:900;
-      font-size:14px;
-      margin-bottom:10px;
-    }
-    .badge .dot{
-      width:10px; height:10px; border-radius:99px;
-      background:var(--point);
+      margin-bottom:6px;
     }
 
-    .sectionTitle{
-      font-weight:900;
-      font-size:13px;
-      margin:10px 0 6px;
-      opacity:.9;
+    .rate{
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:8px;
+      color:#6b5fd6;
     }
 
-    .bullets{
-      margin:0;
-      padding-left:18px;
-      font-size:13px;
-      line-height:1.6;
-    }
-    .keywords{
-      margin:8px 0 0;
-      font-size:13px;
-      line-height:1.6;
-      opacity:.9;
-    }
-    .keywords b{
-      font-weight:900;
+    .product-box ul{
+      padding-left:16px;
+      margin:6px 0 0;
     }
 
-    /* 버튼 2개 가로형 */
-    .btnRow{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin-top:12px;
+    .product-box li{
+      margin-bottom:4px;
     }
-    button{
+
+    /* ───── 버튼 영역 ───── */
+    .btn{
       width:100%;
-      border:none;
+      padding:16px;
       border-radius:18px;
-      padding:14px 12px;
+      border:none;
       background:var(--point);
       color:var(--text);
+      font-size:15px;
       font-weight:900;
-      font-size:14px;
       cursor:pointer;
-      box-shadow: 0 10px 20px rgba(202,181,243,0.35);
-    }
-    button:active{ transform:scale(0.98); }
-
-    .note{
-      margin-top:14px;
-      font-size:12px;
-      opacity:.65;
-      text-align:center;
+      margin-bottom:10px;
     }
 
-    .message{
-      margin-top:14px;
-      padding:16px 14px;
-      border-radius:22px;
-      border:1px solid var(--stroke);
+    .btn:active{
+      transform:scale(0.98);
+    }
+
+    /* ───── 하단 설명 박스 ───── */
+    .info{
+      margin-top:26px;
       background:#fff;
+      border-radius:18px;
+      padding:18px;
+      font-size:13px;
+      line-height:1.6;
+      box-shadow:0 4px 12px rgba(0,0,0,0.04);
     }
-    .message h2{
-      margin:0 0 10px;
+
+    .info h2{
       font-size:14px;
+      margin:0 0 8px;
       font-weight:900;
     }
-    .message .line{
-      font-size:13px;
-      line-height:1.65;
-      margin:0;
-    }
-    .message .sp{
-      height:10px;
-    }
 
-    /* 토스트(복사됨) */
-    .toast{
-      position:fixed;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%);
-      background:#282539;
-      color:#fffbf3;
-      padding:12px 14px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:800;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .2s ease, transform .2s ease;
-      max-width: calc(100% - 24px);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .toast.show{
-      opacity:1;
-      transform:translateX(-50%) translateY(-6px);
-    }
-
-    @media (max-width:420px){
-      .btnRow{ grid-template-columns:1fr; } /* 작은 화면에서는 세로로 자연스럽게 */
+    .info p{
+      margin:6px 0;
     }
   </style>
 </head>
 
 <body>
-  <div class="screen">
-    <div class="wrap">
+  <div class="wrap">
 
-      <div class="top">
-        <p class="title">이피맘 추천 2가지 적금<br>프롬프트 복사</p>
-        <p class="subtitle">“특판 30%” 같은 말보다,<br>우리 집이 현실적으로 받을 수 있는 금리로 정리했어요.</p>
+    <h1>이피맘이 추천하는<br>현실적으로 받을 수 있는 적금 2가지</h1>
 
-        <!-- (선택) 상단 이미지: hero.png 업로드 후 아래 주석을 풀고 .hero를 display:block으로 바꾸면 됩니다 -->
-        <!--
-        <div class="hero">
-          <img src="hero.png" alt="이피맘 일러스트">
-        </div>
-        -->
-      </div>
+    <!-- 🔶 적금 설명 박스 -->
+    <div class="products">
 
-      <div class="grid">
-
-        <!-- KB -->
-        <div class="card">
-          <div class="badge"><span class="dot"></span>🟡 KB 아이사랑적금</div>
-
-          <div class="sectionTitle">이런 집에 잘 맞아요</div>
-          <ul class="bullets">
-            <li>첫째 임신 중이거나</li>
-            <li>아이가 1명인 집</li>
-            <li>아동수당을 KB로 받을 가능성이 있는 집</li>
-          </ul>
-
-          <div class="sectionTitle">특징 키워드</div>
-          <p class="keywords">
-            <b>임신·출산에 유리</b><br>
-            <b>자녀 1명부터 바로 우대</b><br>
-            <b>아동수당 연계 시 금리 점프 큼</b>
-          </p>
-        </div>
-
-        <!-- Shinhan -->
-        <div class="card">
-          <div class="badge"><span class="dot"></span>🔵 신한 다둥이 상생 적금</div>
-
-          <div class="sectionTitle">이런 집에 잘 맞아요</div>
-          <ul class="bullets">
-            <li>신한은행 첫 거래이거나</li>
-            <li>둘째 임신 중이거나</li>
-            <li>아이가 2명 이상인 집</li>
-          </ul>
-
-          <div class="sectionTitle">특징 키워드</div>
-          <p class="keywords">
-            <b>다자녀일수록 유리</b><br>
-            <b>카드·주거래 우대 다양</b><br>
-            <b>기본금리 자체가 높은 편</b>
-          </p>
-        </div>
-
-        <!-- 버튼 2개 가로형 -->
-        <div class="btnRow">
-          <button id="copyKb">KB 프롬프트 복사</button>
-          <button id="copySh">신한 프롬프트 복사</button>
-        </div>
-
-        <div class="note">버튼을 누르면 프롬프트가 복사돼요 → ChatGPT에 붙여넣기만 하면 끝 🤍</div>
-
-        <!-- 하단 메시지 -->
-        <div class="message">
-          <h2>✍️ 적금의 진짜 장점</h2>
-          <p class="line">✔ 매달 자동으로 돈이 모여요</p>
-          <p class="line">✔ 원금 손실 걱정 없이 굴릴 수 있어요</p>
-          <p class="line">✔ 1년 뒤 아이 통장, 비상금, 교육비로 쓰기 좋아요</p>
-
-          <div class="sp"></div>
-
-          <h2>✍️ 요즘 같은 시대에 적금이 의미 있는 이유</h2>
-          <p class="line">금리가 높아 보이는 상품보다,</p>
-          <p class="line"><b>확실하게 받을 수 있는 이자가 중요해요.</b></p>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div id="toast" class="toast">복사됐어요 🤍</div>
-
-  <script>
-    // ✅ KB 아이사랑적금 프롬프트 (상담 말투 + 현재/최대 시나리오 + 아동수당 ‘아동’ 메모 안내 포함)
-    const PROMPT_KB = `You are a “Friendly Savings Consultant & Calculator”.
-You speak like a kind, experienced bank employee mom.
-
-IMPORTANT:
-- All questions and explanations shown to the user MUST be written in Korean.
-- Ask only ONE question at a time.
-- Do NOT calculate or show final results until all questions are answered.
-- Avoid copying policy language. Always rephrase in everyday Korean.
-- Explain both:
-  ① what applies now
-  ② what could apply later (and how to get there)
-
-────────────────────────
-[상품] KB아이사랑적금 (12개월)
-- 기본금리: 연 2.0%
-- 이자는 단리로 계산
-- 이자소득세 15.4% 차감
-
-[우대금리]
-1) 아이사랑 우대(만기 기준 만18세 이하 가족 수)
-- 1명 +1.0%p / 2명 +2.0%p / 3명 +3.0%p / 4명 이상 +4.0%p
-
-2) 임신확인서 제출 우대
-- 임신확인서 제출 시 +1.0%p (1회)
-
-3) 아동수당 우대
-- KB입출금 통장으로 아동수당을 6회 이상 받으면 +3.0%p
-- 만약 지금은 KB로 안 받더라도,
-  “입금 메모/적요에 ‘아동’이 포함되게 해서 6개월(6회) 이상 들어오면
-   우대금리가 붙는다”는 안내를 꼭 해줘.
-
-4) 희망가득 우대
-- 해당 시 +1.0%p (간단히 ‘해당 여부’만 질문)
-
-────────────────────────
-[진행 방식]
-- 사용자에게 한 번에 질문 1개씩.
-- 답변이 애매하면 예시로 다시 물어보기.
-- 마지막에 “지금 기준 결과”와 “아동수당까지 충족했을 때 최대 시나리오”를 둘 다 보여주기.
-
-[질문 순서]
-Q1) 만기 기준 만18세 이하 가족(자녀 포함) 몇 명인가요? (1/2/3/4 이상)
-Q2) 현재 임신 중이신가요? (네/아니요)
-    - 네면: 임신확인서 제출 예정인가요? (네/아니요)
-Q3) 아동수당을 KB로 받고 계신가요? (네/아니요)
-    - 아니요면: “나중에 KB로 받고, 메모/적요에 ‘아동’ 포함되게 해서 6회 이상이면 우대 가능” 안내
-Q4) 희망가득 우대 대상이신가요? (네/아니요)
-Q5) 매달 얼마 넣을까요? 숫자만 (만원 단위) 예: 5/10/20/30
-
-[계산]
-- 단리, 매월 동일 납입, 세전이자 계산 후 세금 15.4% 차감
-- 결과는 원 단위 반올림
-
-[출력]
-1) 지금 기준
-✔ 기본금리 / 지금 우대금리 합 / 지금 최종금리
-✔ 총 납입원금 / 세전이자 / 세후이자 / 만기 실수령
-
-2) (가능하다면) 아동수당 조건까지 채웠을 때
-✔ 추가 가능 우대(+3.0%p) 반영한 ‘최대 시나리오 최종금리’
-✔ 그때의 세후 이자/실수령도 같이 계산
-
-마지막 한 줄:
-“지금 기준으로는 이 정도 이자고요,
-아동수당까지 맞추면 여기서 한 번 더 늘어날 수 있어요.”
-
-Now begin. Ask the first question in Korean.`;
-
-    // ✅ 신한 다둥이 상생 적금 프롬프트 (상담 말투 + 현재/최대 시나리오 + ‘아동’ 메모 안내 포함)
-    const PROMPT_SHINHAN = `You are a “Friendly Savings Consultant & Calculator”.
-You speak like a kind, experienced bank employee mom.
-
-IMPORTANT:
-- All questions and explanations shown to the user MUST be written in Korean.
-- Ask only ONE question at a time.
-- Do NOT calculate or show final results until all questions are answered.
-- Avoid copying policy language. Always rephrase in everyday Korean.
-- Explain both:
-  ① what applies now
-  ② what could apply later (and how to get there)
-
-────────────────────────
-[상품] 신한 다둥이 상생 적금 (12개월)
-- 기본금리: 연 2.5%
-- 월 납입 한도: 최대 30만원
-- 이자는 단리로 계산
-- 이자소득세 15.4% 차감
-- 우대금리는 더해지되, 최종 금리는 최대 연 8.0%까지만
-
-[우대금리]
-1) 저출생상생(결혼/임신/난임/출산 중 해당 + 서류 승인 완료) +1.0%p
-2) 다자녀(2007년 이후 출생 미성년 자녀 기준)
-   - 2명 +1.5%p / 3명 이상 +2.5%p
-3) 서울시다둥이 행복카드 결제 실적 +1.0%p
-4) 주거래(부모급여/아동수당 등 복지성 수당을 신한으로 6개월 이상) +1.0%p
-   - 만약 지금은 아니더라도,
-     “나중에 아동수당을 신한으로 받고, 메모/적요에 ‘아동’이 보이게 해서
-      6개월 이상 들어오면 우대 가능” 안내를 꼭 해줘.
-5) 첫 거래(신한 입출금 통장 첫 거래에 가까운 상태) +1.0%p
-
-────────────────────────
-[진행 방식]
-- 사용자에게 질문 1개씩, 대화하듯 따뜻하게.
-- 최종 계산은 마지막에만.
-- “지금 기준” + “주거래(아동수당)까지 채웠을 때 최대 시나리오” 둘 다 보여주기.
-
-[질문 순서]
-Q1) 매달 얼마 넣을까요? 숫자만 (만원 단위, 최대 30) 예: 10/20/30
-    - 30 초과면: 한도 안내 후 다시 질문
-Q2) 결혼/임신/난임/출산 해당 + 서류 제출/승인까지 하실 예정인가요? (네/아니요)
-Q3) 2007년 이후 출생 미성년 자녀 수는 몇 명인가요? (0/1/2/3)
-Q4) 서울시다둥이 행복카드로 결제 실적 만들 계획 있으세요? (네/아니요)
-Q5) 부모급여/아동수당 같은 복지성 수당을 신한으로 6개월 이상 받을 예정인가요? (네/아니요)
-    - 아니요면: “나중에 ‘아동’ 메모 포함 + 6개월 이상이면 우대 가능” 안내
-Q6) 신한 입출금 통장이 첫 거래에 가까우신가요? (네/아니요)
-
-[계산]
-- 단리, 매월 동일 납입, 세전이자 계산 후 세금 15.4% 차감
-- 최종금리 = 2.5% + (충족한 우대들), 단 8.0% 상한 적용
-- 결과는 원 단위 반올림
-
-[출력]
-1) 지금 기준
-✔ 기본금리 / 지금 우대금리 합 / 지금 최종금리
-✔ 총 납입원금 / 세전이자 / 세후이자 / 만기 실수령
-
-2) (가능하다면) 주거래(아동수당)까지 채웠을 때
-✔ 추가 가능 우대(+1.0%p) 반영한 ‘최대 시나리오 최종금리’
-✔ 그때의 세후 이자/실수령도 같이 계산
-
-마지막 한 줄:
-“지금 기준으로는 이 정도 이자고요,
-아동수당까지 신한으로 받으시면 이자가 한 번 더 늘어날 수 있어요.”
-
-Now begin. Ask the first question in Korean.`;
-
-    const toast = document.getElementById('toast');
-
-    function showToast(text){
-      toast.textContent = text;
-      toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'), 1600);
-    }
-
-    async function copyText(text, label){
-      try{
-        await navigator.clipboard.writeText(text);
-        showToast(`${label} 프롬프트가 복사됐어요 🤍`);
-      }catch(e){
-        // fallback
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast(`${label} 프롬프트가 복사됐어요 🤍`);
-      }
-    }
-
-    document.getElementById('copyKb').addEventListener('click', ()=>copyText(PROMPT_KB, 'KB'));
-    document.getElementById('copySh').addEventListener('click', ()=>copyText(PROMPT_SHINHAN, '신한'));
-  </script>
-</body>
-</html>
+      <!-- KB -->
+      <div class="product-box">
+        <div class="product-title">🟡 KB 아이사랑적금</div
