@@ -1,194 +1,112 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>이피맘 프롬프트 복사</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이피맘 적금 비교 계산기</title>
 
-  <style>
-    :root{
-      --bg:#fffbf3;
-      --text:#282539;
-      --point:#cab5f3;
-    }
-
-    *{ box-sizing:border-box; }
-
-    body{
-      margin:0;
-      background:var(--bg);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      color:var(--text);
-    }
-
-    /* 📱 인스타 링크용 모바일 화면 */
-    .screen{
-      min-height:100svh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:28px 18px;
-    }
-
-    .card{
-      width:100%;
-      max-width:420px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
-    }
-
-    /* 🧸 메인 상단 이미지 */
-    .hero{
-      width:100%;
-      max-width:300px;
-      margin-bottom:26px;
-    }
-
-    .hero img{
-      width:100%;
-      height:auto;
-      display:block;
-      border-radius:24px;
-    }
-
-    h1{
-      font-size:18px;
-      font-weight:800;
-      margin:0 0 10px;
-      line-height:1.4;
-    }
-
-    .desc{
-      font-size:14px;
-      opacity:0.75;
-      margin-bottom:30px;
-    }
-
-    /* 🔘 메인 CTA 버튼 */
-    button{
-      width:100%;
-      padding:18px 16px;
-      border-radius:20px;
-      border:none;
-      background:var(--point);
-      color:var(--text);
-      font-size:17px;
-      font-weight:900;
-      cursor:pointer;
-      box-shadow: 0 10px 20px rgba(202,181,243,0.35);
-    }
-
-    button:active{
-      transform:scale(0.98);
-    }
-
-    .hint{
-      margin-top:14px;
-      font-size:12px;
-      opacity:0.6;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  background:#fffbf3;
+  font-family:system-ui, sans-serif;
+  color:#282539;
+}
+.wrap{
+  max-width:420px;
+  margin:0 auto;
+  padding:24px;
+  text-align:center;
+}
+.hero img{
+  width:100%;
+  border-radius:22px;
+  margin-bottom:20px;
+}
+input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #ddd;
+  margin-bottom:10px;
+  font-size:15px;
+}
+button{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:18px;
+  background:#cab5f3;
+  font-weight:800;
+  margin-top:10px;
+}
+.result{
+  background:#fff;
+  border-radius:18px;
+  padding:16px;
+  margin-top:20px;
+  text-align:left;
+  font-size:14px;
+}
+.small{
+  font-size:12px;
+  opacity:.7;
+  margin-top:10px;
+}
+</style>
 </head>
 
 <body>
-  <div class="screen">
-    <div class="card">
+<div class="wrap">
 
-      <!-- 🧸 이피맘 메인 상단 이미지 -->
-      <div class="hero">
-        <img src="hero.png" alt="이피맘 곰 가족 일러스트">
-      </div>
-
-      <h1>
-        이피맘 적금 계산기<br>
-      </h1>
-
-      <div class="desc">
-        버튼 한 번이면 바로 복사돼요
-      </div>
-
-      <button id="copyBtn">
-        📋 프롬프트 복사하기
-      </button>
-
-      <div class="hint">
-        복사 후 ChatGPT에 붙여넣기만 하면 끝
-      </div>
-
-    </div>
+  <div class="hero">
+    <img src="hero.png" alt="이피맘 적금">
   </div>
 
-  <script>
-    // 🔒 화면에는 안 보이지만 복사될 프롬프트
-    const PROMPT_TEXT = `You are an “Interactive Savings Calculator”.
+  <h2>아기 있는 집<br>현실 금리 적금 비교</h2>
 
-You must ask the user questions one by one, collect the required information in order,
-and only after all inputs are completed, calculate and explain the savings principal and interest.
+  <input placeholder="월 납입액 (만원)" id="money">
 
-IMPORTANT:
-- All questions and answers shown to the user MUST be written in Korean.
-- This instruction is written in English, but your responses must always be in Korean.
+  <button onclick="calculate()">한 번에 두 적금 계산하기</button>
 
-📌 Conversation Rules
-- Ask only ONE question at a time.
-- Ask the next question only after the user answers the current one.
-- If the user gives a non-numeric or unclear answer, politely ask again with examples.
-- Do NOT show any calculation results until all questions are completed.
+  <div id="result"></div>
 
-📌 Question Order (must follow exactly)
-1️⃣ Savings period (number of months)
-2️⃣ Monthly deposit amount (KRW, in units of 10,000 KRW)
-   - Ask the user to enter only a number such as: 1, 5, 10, 20
-   - Interpret the number as “만원”
-3️⃣ Annual interest rate (%)
+  <button onclick="copyKB()">📋 KB 아이사랑 프롬프트 복사</button>
+  <button onclick="copySH()">📋 신한 다둥이 프롬프트 복사</button>
 
-※ This savings calculation is ALWAYS based on SIMPLE INTEREST.
-※ Do NOT ask about interest type or offer alternatives.
+  <div class="small">
+    특판 고금리보다, 지금 받을 수 있는 금리를 봐요.
+  </div>
 
-📌 Calculation Rules (Simple Interest Only)
-- Assume a fixed monthly deposit amount.
-- Convert the annual interest rate into a monthly rate.
-- Calculate total interest using simple interest.
-- Calculate pre-tax interest first.
-- Apply interest income tax of 15.4% to calculate after-tax interest.
-- Round all results to the nearest won.
+</div>
 
-📌 Output Format (in Korean)
-✔ 총 납입 원금  
-✔ 세전 이자  
-✔ 이자소득세 (15.4%)  
-✔ 세후 이자  
-✔ 실제 만기 수령 금액  
+<script>
+function calculate(){
+  const m = Number(document.getElementById('money').value)*10000;
+  if(!m){ alert("금액을 입력해주세요"); return;}
 
-At the end, add one simple sentence in Korean explaining:
-“How much money the user actually receives at maturity.”
+  const kbRate = 0.07;   // 예시: 아동수당 포함 최대 시나리오
+  const shRate = 0.065;
 
-📌 Tone & Style
-- Explain calmly and clearly, like a bank employee mom.
-- Use simple, friendly language that even someone bad with numbers can understand.
-- Avoid technical financial terms.
+  const kbInterest = m * kbRate * 6.5; // 단순 예시 구조
+  const shInterest = m * shRate * 6.5;
 
-Now start the calculation.
-👉 Ask the first question in Korean.`;
+  document.getElementById("result").innerHTML = `
+  <div class="result">
+    <b>KB 아이사랑적금</b><br>
+    예상 세후 이자: 약 ${(kbInterest*0.846).toFixed(0)}원
+  </div>
 
-    const btn = document.getElementById('copyBtn');
+  <div class="result">
+    <b>신한 다둥이 상생 적금</b><br>
+    예상 세후 이자: 약 ${(shInterest*0.846).toFixed(0)}원
+  </div>
+  `;
+}
 
-    btn.addEventListener('click', async () => {
-      try{
-        await navigator.clipboard.writeText(PROMPT_TEXT);
-        alert("프롬프트가 복사됐어요 🤍\nChatGPT에 붙여넣어 주세요!");
-      }catch(e){
-        const ta = document.createElement('textarea');
-        ta.value = PROMPT_TEXT;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        alert("프롬프트가 복사됐어요 🤍");
-      }
-    });
-  </script>
+function copyKB(){ alert("KB 프롬프트 복사"); }
+function copySH(){ alert("신한 프롬프트 복사"); }
+</script>
+
 </body>
 </html>
