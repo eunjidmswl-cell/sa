@@ -2,112 +2,127 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>이피맘 | 프롬프트 복사</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>이피맘 프롬프트 복사</title>
+
   <style>
     :root{
-      --bg:#0b0f19;
-      --card:#0f172a;
-      --text:#e5e7eb;
-      --muted:#94a3b8;
-      --btn:#ffffff;
-      --btnText:#0b0f19;
-      --shadow: 0 20px 60px rgba(0,0,0,.35);
-      --radius:22px;
+      --bg:#fffbf3;
+      --text:#282539;
+      --point:#cab5f3;
     }
-    *{box-sizing:border-box}
+
+    *{ box-sizing:border-box; }
+
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background: radial-gradient(1200px 600px at 30% 20%, rgba(255,241,242,.18), transparent 60%),
-                  radial-gradient(900px 500px at 80% 70%, rgba(245,243,255,.16), transparent 60%),
-                  var(--bg);
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:22px;
+      background:var(--bg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       color:var(--text);
     }
-    .wrap{
-      width:min(520px, 100%);
-      background: rgba(15, 23, 42, .72);
-      border: 1px solid rgba(148,163,184,.18);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 20px;
-      backdrop-filter: blur(10px);
-      text-align:center;
-    }
-    .brand{
+
+    /* 📱 인스타 링크용 모바일 화면 */
+    .screen{
+      min-height:100svh;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:10px;
-      margin-bottom:14px;
+      padding:28px 18px;
     }
-    .logo{
-      width:42px; height:42px;
-      border-radius:14px;
-      display:flex; align-items:center; justify-content:center;
-      font-weight:900;
-      background: linear-gradient(135deg, rgba(255,241,242,.9), rgba(245,243,255,.9));
-      color:#0b0f19;
-      border:1px solid rgba(255,255,255,.4);
+
+    .card{
+      width:100%;
+      max-width:420px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
     }
-    .title{
-      font-size:15px;
+
+    /* 🧸 메인 상단 이미지 */
+    .hero{
+      width:100%;
+      max-width:300px;
+      margin-bottom:26px;
+    }
+
+    .hero img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:24px;
+    }
+
+    h1{
+      font-size:18px;
       font-weight:800;
-      letter-spacing:-.2px;
+      margin:0 0 10px;
+      line-height:1.4;
     }
+
     .desc{
-      margin:0 0 16px;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.5;
+      font-size:14px;
+      opacity:0.75;
+      margin-bottom:30px;
     }
+
+    /* 🔘 메인 CTA 버튼 */
     button{
       width:100%;
-      padding:16px 14px;
-      border:0;
-      border-radius:18px;
+      padding:18px 16px;
+      border-radius:20px;
+      border:none;
+      background:var(--point);
+      color:var(--text);
       font-size:17px;
       font-weight:900;
       cursor:pointer;
-      background: var(--btn);
-      color: var(--btnText);
-      transition: transform .06s ease, opacity .2s ease;
+      box-shadow: 0 10px 20px rgba(202,181,243,0.35);
     }
-    button:active{ transform: scale(.99); }
-    .status{
-      margin-top:12px;
-      min-height:20px;
-      font-size:13px;
-      color:var(--muted);
+
+    button:active{
+      transform:scale(0.98);
     }
+
     .hint{
-      margin-top:8px;
+      margin-top:14px;
       font-size:12px;
-      color:rgba(148,163,184,.9);
+      opacity:0.6;
     }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="brand">
-      <div class="logo">이피</div>
-      <div class="title">이피맘 프롬프트</div>
+  <div class="screen">
+    <div class="card">
+
+      <!-- 🧸 이피맘 메인 상단 이미지 -->
+      <div class="hero">
+        <img src="hero.png" alt="이피맘 곰 가족 일러스트">
+      </div>
+
+      <h1>
+        이피맘 적금 계산기<br>
+        프롬프트
+      </h1>
+
+      <div class="desc">
+        버튼 한 번이면 바로 복사돼요
+      </div>
+
+      <button id="copyBtn">
+        📋 프롬프트 복사하기
+      </button>
+
+      <div class="hint">
+        복사 후 ChatGPT에 붙여넣기만 하면 끝
+      </div>
+
     </div>
-
-    <p class="desc">버튼을 누르면 프롬프트가 자동으로 복사돼요 🤍</p>
-
-    <button id="copyBtn">📋 프롬프트 복사하기</button>
-    <div class="status" id="status"></div>
-    <div class="hint">복사 후, ChatGPT에 붙여넣기만 하면 돼요.</div>
   </div>
 
   <script>
-    // ✅ 페이지에는 보이지 않지만, 복사될 "숨겨진 프롬프트" (세전/세후 포함 버전)
+    // 🔒 화면에는 안 보이지만 복사될 프롬프트
     const PROMPT_TEXT = `You are an “Interactive Savings Calculator”.
 
 You must ask the user questions one by one, collect the required information in order,
@@ -160,28 +175,19 @@ Now start the calculation.
 👉 Ask the first question in Korean.`;
 
     const btn = document.getElementById('copyBtn');
-    const status = document.getElementById('status');
-
-    function setStatus(msg){
-      status.textContent = msg;
-    }
 
     btn.addEventListener('click', async () => {
       try{
         await navigator.clipboard.writeText(PROMPT_TEXT);
-        setStatus("✅ 복사 완료! 이제 ChatGPT에 붙여넣기만 하면 돼요.");
+        alert("프롬프트가 복사됐어요 🤍\nChatGPT에 붙여넣어 주세요!");
       }catch(e){
-        // fallback for iOS / permission issues
         const ta = document.createElement('textarea');
         ta.value = PROMPT_TEXT;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
         document.body.appendChild(ta);
-        ta.focus();
         ta.select();
-        const ok = document.execCommand('copy');
+        document.execCommand('copy');
         document.body.removeChild(ta);
-        setStatus(ok ? "✅ 복사 완료! (대체 방식으로 복사했어요)" : "⚠️ 자동 복사가 막혔어요. 브라우저 권한을 확인해 주세요.");
+        alert("프롬프트가 복사됐어요 🤍");
       }
     });
   </script>
